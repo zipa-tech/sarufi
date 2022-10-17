@@ -53,11 +53,9 @@ void main() async {
 }
 ```
 
-## Additional information
-
-For issues about the project write to us at [*Github*](https://github.com/kalokola/sarufi)
-
-Inspiration
-
+## Credits and Inspiration
+Muchas bendiciones a 😎
 1. [*Sarufi*](https://docs.saufi.io/)
 2. [*Neuro Tech Africa*](https://neurotech.africa/)
+
+For issues about the project write to us at [*Github*](https://github.com/kalokola/sarufi)
