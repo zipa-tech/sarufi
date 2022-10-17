@@ -41,4 +41,5 @@ SARUFI: For issues about the project write to us at [*Github*](https://github.co
 
 Inspired
 
-1. [*Sarufi*](https://docs.saufi.io)
+1. [*Sarufi*](https://docs.saufi.io/)
+2. [*Neuro Tech Africa*](https://neurotech.africa/)
