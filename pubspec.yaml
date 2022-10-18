@@ -1,13 +1,15 @@
 name: sarufi
 description: A Dart SDK for interacting with sarufi.io
 version: 0.0.1
-homepage: https://github.com/kalokola/sarufi
+homepage: https://github.com/zipa-tech/sarufi
 
 environment:
   sdk: ">=2.17.6 <3.0.0"
   flutter: ">=1.17.0"
 
 dependencies:
+  logging:
+  http:
   flutter:
     sdk: flutter
 

@@ -1,5 +1,3 @@
-<samp>
-
 # [Sarufi](https://pub.dev/packages/sarufi/)
 
 [![Made in Tanzania](https://img.shields.io/badge/made%20in-tanzania-008751.svg?style=flat-square)](https://github.com/Tanzania-Developers-Community/made-in-tanzania)
@@ -14,7 +12,7 @@ This is a Dart SDK that helps users interact with [sarufi.io](https://docs.saruf
 ## Getting started
 **Steps to install Sarufi to your Project**
 
-1. In your Project's [**pubspec.yaml**]() file of your project add the
+1. In your Project's [**pubspec.yaml**]() file of your project add the snippet below
 
 
 ```yaml
