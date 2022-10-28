@@ -11,6 +11,7 @@ dependencies:
   logging:
   http:
   uuid:
+  path:
   flutter:
     sdk: flutter
 

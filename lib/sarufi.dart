@@ -1,7 +1,12 @@
 library sarufi;
 
-import 'package:sarufi/exports.dart';
+import 'dart:io';
+import 'package:path/path.dart' as pathPac;
+
+
 import 'package:http/http.dart' as http;
+
+import 'package:sarufi/exports.dart';
 
 /// Sarufi Instance
 class Sarufi {
@@ -9,8 +14,6 @@ class Sarufi {
   String passWord;
   String? token;
   dynamic data;
-  String chatId = const Uuid().v4();
-
   Sarufi(
       {required this.userName, required this.passWord, this.token, this.data});
 
@@ -200,10 +203,20 @@ Future updateBot({
 
     final response = await putRequest(url:botCreateUrl, headers:headers(), data:data);
     if (response.statusCode == 200) {
-      //return Bot(response.json(), token=self.token)
+      return Bot(data:response.json(), token=self.token, chatId: id)
     }
     return response;
   }
+
+
+readFile({required String path}){
+  var filePath = pathPac.join(Directory.current.path, path);
+  File file = File(filePath);
+  var fileContent = file.readAsStringSync();
+  return fileContent;
+}
+
+
 
     // 422 - 471
   Future updateFromFile({
@@ -212,9 +225,10 @@ Future updateBot({
     required String flow,
     required String  metadata
     }){
-    final intents = readFile(intents);
-    final flow = readFile(flow)
-    final metadata = readFile(metadata) ?? {};
+
+    final intents = readFile(path:intents);
+    final flow = readFile(path:flow)
+    final metadata = readFile(path:metadata);
     
     return updateBot(
         id:id,
@@ -242,12 +256,12 @@ Future updateBot({
   // 
   Future bots() async {
     log.info("Getting bots");
-      //List sarufiBots = [];
+      List sarufiBots = [];
     String botUrl = "${Statics.sarufiUrl}/chatbots";
     final response = await  getRequest(url: botUrl, headers: headers());
     if (response.statusCode == 200){
       for (var bot in json.decode(response.body)){
-        //sarufiBots.add(Bot(bot,token:token));
+        sarufiBots.add(Bot(bot,token:token));
       }
     }
    return json.decode(response.body);
@@ -312,10 +326,7 @@ Future updateBot({
 
 
 
-  void deleteBot(String id) async {
-    String deleteUrl = "${Statics.sarufiUrl}chatbot/$id";
-    await deleteRequest(deleteUrl);
-  }
+
 
   // 832 - 836
   @override
@@ -332,31 +343,57 @@ Future updateBot({
     return data['name'];
   }
 
-  updateBot(
-      [id, name, description, intents, industry, flow, bool? visible]) async {
-    log.info("Updating bot");
-    data = {
-      "name": name,
-      "description": description,
-      "intents": intents,
-      "flows": flow,
-      "industry": industry,
-      "visible_on_community": visible,
-    };
+}
 
-    var response = await http.put(Uri.parse("${Statics.sarufiUrl}chatbot/$id"),
-        body: data);
-    if (response.statusCode == 200) {
-      return {'data': json.decode(response.body), 'token': token};
-    }
-    return json.decode(response.body);
+
+class Bot extends Sarufi {
+  String chatId = const Uuid().v4();
+  final dynamic data;
+
+  Bot({required super.userName, required super.passWord,  required this.data,
+        required this.chatId});
+
+
+
+  @override
+  id(){
+   return data.get("id");
+  }
+  
+  @override
+  name(){
+    return data.get("name");
   }
 
-  sarufiBot(dynamic botData, String token, {required data}) {
-    return data;
+  @override
+  industry(){
+    return data.get("industry");
   }
 
-  industry() {
-    return data['industry'];
+  void deleteBot(String id) async {
+    String deleteUrl = "${Statics.sarufiUrl}chatbot/$id";
+    await deleteRequest(deleteUrl);
   }
+
+  respond({
+    String messageType = 'text',
+    String channel = 'general',
+    required String message,
+    dynamic chatId}){
+    return chat(
+            botId:id,
+            chatId:
+            message:message,
+            messageType:message_type,
+            channel:channel,
+        )
+  }
+  // 819 - 831
+  void delete(){
+    return deleteBot(id());
+  }
+
+  // 832 - 836
+  @override
+  String toString() => 'Bot(data: $data)';
 }
