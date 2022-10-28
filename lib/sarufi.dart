@@ -81,9 +81,10 @@ class Sarufi {
   Future putRequest(
       {required String url,
       required dynamic headers,
+       required dynamic data,
       int retry = 1}) async {
 
-    final response = await http.put(Uri.parse(url), headers: headers);
+    final response = await http.put(Uri.parse(url), headers: headers, body: data);
     var jsonRespose = json.decode(response.body);
     
     if (response.statusCode == 200) {
@@ -156,7 +157,7 @@ Future<String> createBot({
     return response;
   }
 
-  // 
+  // 324 - 367
   Future createFromFile({
     required String intents,
     required String flow,
@@ -165,7 +166,7 @@ Future<String> createBot({
     final intents = readFile(intents);
     final flow = readFile(flow)
     final metadata = readFile(metadata) ?? {};
-    
+
     return createBot(name:metadata.get("name", "put name here"),
                     description:metadata.get("description"),
                     industry:metadata.get("industry"),
@@ -174,6 +175,86 @@ Future<String> createBot({
                     flow:flow,
                   );
   }
+
+  // 369 - 421
+Future updateBot({
+  required int id,
+  required String name,
+  required String description,
+  required String industry,
+  required Map flow,
+  required List intents,
+  required bool visible,
+}) async {
+  log.info("Updating bot");
+  String botCreateUrl = "${Statics.sarufiUrl}chatbot/$id";
+
+    data = {
+      "name": name,
+      "description": description,
+      "intents": intents,
+      "flows": flow,
+      "industry": industry,
+      "visible_on_community": visible,
+    };
+
+    final response = await putRequest(url:botCreateUrl, headers:headers(), data:data);
+    if (response.statusCode == 200) {
+      //return Bot(response.json(), token=self.token)
+    }
+    return response;
+  }
+
+    // 422 - 471
+  Future updateFromFile({
+    required int id,
+    required String intents,
+    required String flow,
+    required String  metadata
+    }){
+    final intents = readFile(intents);
+    final flow = readFile(flow)
+    final metadata = readFile(metadata) ?? {};
+    
+    return updateBot(
+        id:id,
+        name:metadata.get("name", "put name here"),
+        description:metadata.get("description"),
+        industry:metadata.get("industry"),
+        visible:metadata.get("visible_on_community"),
+        intents:intents,
+        flow:flow,
+      );
+  }
+
+  // 472 - 498
+  Future getBot({required int id}) async {
+    log.info("Getting bot with id: $id");
+    String botUrl = "${Statics.sarufiUrl}/chatbot$id";
+    final response = await  getRequest(url: botUrl, headers: headers());
+    if (response.statusCode == 200){
+      // return Bot(response.json(), token=self.token);
+    }
+    
+  return json.decode(response.body);
+  }
+
+  // 
+  Future bots() async {
+    log.info("Getting bots");
+      //List sarufiBots = [];
+    String botUrl = "${Statics.sarufiUrl}/chatbots";
+    final response = await  getRequest(url: botUrl, headers: headers());
+    if (response.statusCode == 200){
+      for (var bot in json.decode(response.body)){
+        //sarufiBots.add(Bot(bot,token:token));
+      }
+    }
+   return json.decode(response.body);
+  }
+          
+
+
   Future headers() async {
     if (token == null) {
       var tokenInfo = await getToken();
